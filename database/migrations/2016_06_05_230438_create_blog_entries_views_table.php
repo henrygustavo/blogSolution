@@ -12,7 +12,7 @@ class CreateBlogEntriesViewsTable extends Migration
      */
     public function up()
     {
-               DB::statement("CREATE VIEW blog_entries_views AS
+               DB::connection('mysql-emulate-prepares')->statement("CREATE VIEW blog_entries_views AS
 
                         SELECT 
                           entry.id,
