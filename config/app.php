@@ -149,6 +149,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
         Zizaco\Entrust\EntrustServiceProvider::class,
+        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -203,8 +204,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'DebugBar' => Barryvdh\Debugbar\Facade::class,
-        //'JWTAuth'   => Tymon\JWTAuth\Facades\JWTAuth::class,
-        //'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+        'JWTAuth'   => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
         'Entrust' => Zizaco\Entrust\EntrustFacade::class,
 
     ],

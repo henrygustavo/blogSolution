@@ -23,5 +23,8 @@ Route::group(array('prefix' => 'api'), function() {
     // this ensures that a user can't access api/create or api/edit when there's nothing there
    
     Route::get('getImageFolders', 'GoogleDriveController@getImageFolders');
+    Route::get('authenticate/user', 'AuthenticateController@getAuthenticatedUser');
+    Route::get('authenticate/users', 'AuthenticateController@index');
+    Route::post('authenticate', 'AuthenticateController@authenticate');
     
 });
