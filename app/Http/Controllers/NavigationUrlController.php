@@ -17,7 +17,7 @@ class NavigationUrlController extends Controller
        public function __construct(JWTAuth $jwt) {
            $this->jwt = $jwt;
         // Apply the jwt.auth middleware to all methods in this controller
-        $this->middleware('jjwt.auth.permissions:admin',['except' => ['getPublicUrls']]);
+        $this->middleware('jwt.auth.permissions:admin',['except' => ['getPublicUrls']]);
     }
 
     /**

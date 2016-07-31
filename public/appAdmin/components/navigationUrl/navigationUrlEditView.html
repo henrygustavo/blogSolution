@@ -1,0 +1,47 @@
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-md-8 col-lg-offset-4">
+            <h2>Navigation Url</h2>
+        </div>
+    </div>
+    <form name="form" role="form" novalidate>
+        <div class="row">
+            <div class="col-md-4 well col-lg-offset-4">
+
+                <input-text-edit label="Name" name="name"  minlength ="3"  maxlength="20" required></input-text-edit>
+                <input-text-edit label="Value" name="value"  minlength ="3"  maxlength="20" required></input-text-edit>
+                <input-text-edit label="Url" name="url"  minlength ="1"  maxlength="50" required></input-text-edit>
+                <div class="form-group">
+                    <label>Icon</label>
+                     <div ng-class="{'has-error': form.icon.$dirty && form.icon.$invalid}">
+                        <angucomplete-alt id="icon" placeholder="Search icons" pause="300" 
+                                  selected-object="selectedIcon" title-field="name" 
+                                  local-data="icons" search-fields="name"
+                                  input-class="form-control form-control-small"
+                                  input-name="icon"
+                                  initial-value="model.icon" has-icon="true" />
+                    </div> 
+                    <div class="text-danger" ng-messages="form.icon.$error" ng-if="form.icon.$dirty">
+                        <div ng-messages-include="appAdmin/shared/html/validation-messages.html"></div>
+                    </div>
+                </div>
+                <input-text-edit label="Order" name="order" decimal="0" required></input-text-edit>
+                <input-text-edit label="State" name="state" select="state.value as state.text for state in states" required ></input-text-edit>
+                <input-text-edit label="Is Admin" name="isAdmin" checkbox ></input-text-edit>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 well col-lg-offset-4">
+                <div class="form-group">
+                    <div class="col-md-3" style="padding: 1px">
+                        <a ui-sref="navigationUrlList" class="btn btn-default btn-block">Back</a>
+                    </div>
+                    <div class="col-md-9" style=" padding: 1px">
+                        <button class="btn btn-primary btn-block" ng-disabled="form.$invalid" ng-click="save(model)">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- /#page-wrapper -->

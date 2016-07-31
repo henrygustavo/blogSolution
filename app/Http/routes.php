@@ -11,9 +11,14 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function() {   
+  return  View::make('index'); // will return app/views/index.php 
 });
+
+Route::get('/admin', function() {   
+  return  View::make('admin'); // will return app/views/index.php 
+});
+
 
 // API ROUTES ==================================  
 Route::group(array('prefix' => 'api'), function() {
