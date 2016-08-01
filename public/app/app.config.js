@@ -77,6 +77,6 @@ applicationModule.config(function ($urlRouterProvider, $stateProvider, $location
 })
         .constant('GlobalInfo',
                 {
-                    apiUrl: '/api',
+                    apiUrl: localHostUrl+'/api',
                     localHostUrl: localHostUrl
                 });
