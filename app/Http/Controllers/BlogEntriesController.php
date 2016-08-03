@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Collection;
 use \Illuminate\Support\Facades\DB;
 use \App\ BlogTag;
 use Tymon\JWTAuth\JWTAuth;
+use Illuminate\Support\Facades\Log;
 
 class BlogEntriesController extends Controller {
 
@@ -34,11 +35,15 @@ class BlogEntriesController extends Controller {
 
         try {
 
+            Log::info('BlogEntries-starting to get blog entries');
             $query = BlogEntriesView::select();
 
-            return response()->json(DateHelper::getQueryPagination($query));
-        } catch (\PDOException $exception) {
+            $response = DateHelper::getQueryPagination($query);
+            Log::info('BlogEntries-finishing to get blog entries');
 
+            return response()->json($response);
+        } catch (\PDOException $exception) {
+            Log::info('BlogEntries-exception to get blog entries'.$exception->getMessage());
             // something went wrong
             return response()->json(['error' => $exception->getMessage()], 500);
         }
@@ -61,13 +66,17 @@ class BlogEntriesController extends Controller {
     public function store(BlogEntriesRequest $request) {
         try {
 
+            Log::info('BlogEntries-starting to store blog entries');
+
             $blogEntries = $this->setBlogEntries($request);
             $blogEntriesTag = $this->getBlogEntriesTag($request);
             $this->insertBlogEntries($blogEntries, $blogEntriesTag);
 
+             Log::info('BlogEntries-finishig to store blog entries');
+
             return response()->json('Data saved');
         } catch (\PDOException $exception) {
-
+            Log::info('BlogEntries-exception to store blog entries'.$exception->getMessage());
             // something went wrong
             return response()->json(['error' => $exception->getMessage()], 500);
         }
@@ -81,20 +90,25 @@ class BlogEntriesController extends Controller {
      */
     public function show($id) {
 
+        Log::info('BlogEntries-starting to show blog entry id='.$id);
         $blogEntries = BlogEntries::find($id);
+
+        Log::info('BlogEntries-finishing to show blog entry id='.$id);
         return response()->json($blogEntries);
     }
 
     public function getBlogEntries($headerUrl) {
 
+        Log::info('BlogEntries-starting to getBlogEntries '.$headerUrl);
         $blogEntries = BlogEntries::where('headerUrl', '=', $headerUrl)->first();
+        Log::info('BlogEntries-finishing to getBlogEntries');
         return response()->json($blogEntries);
     }
 
     public function getBlogEntriesComments($id) {
-
+        Log::info('BlogEntries-starting to getBlogEntriesComments '.$id);
         $response = BlogEntriesComments::where('blog_entries_id', '=', $id)->where('state', '=', '1')->get();
-
+        Log::info('BlogEntries-finishing to getBlogEntriesComments '.$id);
         return response()->json($response);
     }
 
@@ -102,11 +116,12 @@ class BlogEntriesController extends Controller {
 
         try {
 
+            Log::info('BlogEntries-starting to addBlogEntriesComment ');
             BlogEntriesComments::create($request->all());
-
+            Log::info('BlogEntries-finishing to addBlogEntriesComment ');
             return response()->json('Comment saved');
         } catch (\PDOException $exception) {
-
+            Log::info('BlogEntries-exception to addBlogEntriesComment'.$exception->getMessage());
             // something went wrong
             return response()->json(['error' => $exception->getMessage()], 500);
         }
@@ -144,6 +159,7 @@ class BlogEntriesController extends Controller {
 
     private function setBlogEntries(BlogEntriesRequest $request) {
 
+        Log::info('BlogEntries-starting to setBlogEntries '.$request['id']);
         $blogEntries = new BlogEntries;
 
         if ($request['id']) {
@@ -157,6 +173,7 @@ class BlogEntriesController extends Controller {
         $blogEntries->content = $request['content'];
         $blogEntries->state = $request['state'];
 
+        Log::info('BlogEntries-finishing to setBlogEntries '.$request['id']);
         return $blogEntries;
     }
 

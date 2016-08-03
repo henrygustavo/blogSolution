@@ -9,6 +9,7 @@ use App\Helpers\DateHelper;
 use App\Http\Requests\PersonalInformationRequest;
 use DebugBar;
 use Tymon\JWTAuth\JWTAuth;
+use Illuminate\Support\Facades\Log;
 
 class PersonalInformationController extends Controller {
 
@@ -27,13 +28,17 @@ protected $jwt;
      */
     public function index() {
 
+        Log::info('PersonalInformation-starting PersonalInformation');
+
         try {
 
             $query = PersonalInformation::select();
+            $response  = DateHelper::getQueryPagination($query);
+             Log::info('PersonalInformation-finishing PersonalInformation');
 
-            return response()->json(DateHelper::getQueryPagination($query));
+            return response()->json($response);
         } catch (\PDOException $exception) {
-
+            Log::info('PersonalInformation-exception PersonalInformation'.$exception->getMessage());
             // something went wrong
             return response()->json(['error' => $exception->getMessage()], 500);
         }
@@ -54,23 +59,26 @@ protected $jwt;
      * @return Response
      */
     public function store(PersonalInformationRequest $request) {
+        
+        Log::info('PersonalInformation-starting store'.$request['id']);
+
         try {
 
             $id = $request['id'];
-            DebugBar::info($id);
             
             if ($id == '0') {
-                DebugBar::info('I');
+  
                 PersonalInformation::create($request->all());
             } else {
-                DebugBar::info('U');
+              
                 $personalInformation = PersonalInformation::find($id);
                 $personalInformation->fill($request->all());
                 $personalInformation->save();
             }
+             Log::info('PersonalInformation-finishing store'.$request['id']);
             return response()->json('Data saved');
         } catch (\PDOException $exception) {
-
+            Log::info('PersonalInformation-exception store'.$exception->getMessage());
             // something went wrong
             return response()->json(['error' => $exception->getMessage()], 500);
         }
@@ -84,13 +92,22 @@ protected $jwt;
      */
     public function show($id) {
 
+        Log::info('PersonalInformation-starting show'.$id);
+        
         $personalInformation = PersonalInformation::find($id);
+        
+        Log::info('PersonalInformation-finishing show'.$id);
         return response()->json($personalInformation);
     }
 
     public function getPersonalInformation() {
 
+        Log::info('PersonalInformation-starting getPersonalInformation');
+
         $personalInformation = PersonalInformation::find(1);
+
+        Log::info('PersonalInformation-finishing getPersonalInformation');
+
         return response()->json($personalInformation);
     }
     

@@ -8,6 +8,7 @@ use \App\BlogTag;
 use App\Helpers\DateHelper;
 use \App\BlogEntriesTag;
 use Tymon\JWTAuth\JWTAuth;
+use Illuminate\Support\Facades\Log;
 
 class TagController extends Controller {
 
@@ -28,10 +29,16 @@ protected $jwt;
 
         try {
 
+            Log::info('Tag-starting to get tags');
+            
             $result = BlogTag::where('state', 1)->orderBy('name', 'asc');
-            return response()->json(DateHelper::convertToListItem($result, 'id', 'name'));
+            $response = DateHelper::convertToListItem($result, 'id', 'name');
+            
+            Log::info('Tag-finishing to get tags');
+            return response()->json($response);
         } catch (\PDOException $exception) {
 
+            Log::info('Tag-exception to get tags'.$exception->getMessage());
             // something went wrong
             return response()->json(['error' => $exception->getMessage()], 500);
         }
@@ -41,9 +48,15 @@ protected $jwt;
 
         try {
 
-          return response()->json(BlogTag::where('state', '=', 1)->where('name', 'like', '%' . $name . '%')->orderBy('name', 'asc')->get());
-        } catch (\PDOException $exception) {
+            Log::info('Tag-starting to getTagFilter'.$name);
 
+            $response = BlogTag::where('state', '=', 1)->where('name', 'like', '%' . $name . '%')->orderBy('name', 'asc')->get();
+
+            Log::info('Tag-finishing to getTagFilter'.$name);
+
+          return response()->json($response);
+        } catch (\PDOException $exception) {
+            Log::info('Tag-exception to getTagFilter'.$exception->getMessage());
             // something went wrong
             return response()->json(['error' => $exception->getMessage()], 500);
         }
@@ -53,12 +66,17 @@ protected $jwt;
 
         try {
 
-            $result =BlogEntriesTag::where('blog_entries_id', '=', $id)
+            Log::info('Tag-starting to getTagsByBlogEntriesId'.$id);
+
+            $result = BlogEntriesTag::where('blog_entries_id', '=', $id)
                     ->join('blog_tags', 'blog_entries_tags.blog_tags_id', '=', 'blog_tags.id')
                     ->select('blog_tags.id', 'blog_tags.name');
-            return response()->json(DateHelper::convertToListItem($result, 'id', 'name'));
-        } catch (\PDOException $exception) {
+            $response = DateHelper::convertToListItem($result, 'id', 'name');
 
+            Log::info('Tag-finishing to getTagsByBlogEntriesId'.$id);
+            return response()->json($response);
+        } catch (\PDOException $exception) {
+            Log::info('Tag-exception to getTagsByBlogEntriesId'.$exception->getMessage());
             // something went wrong
             return response()->json(['error' => $exception->getMessage()], 500);
         }

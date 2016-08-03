@@ -9,6 +9,7 @@ use App\Helpers\DateHelper;
 use App\Http\Requests\NavigationUrlRequest;
 use DebugBar;
 use Tymon\JWTAuth\JWTAuth;
+use Illuminate\Support\Facades\Log;
 
 class NavigationUrlController extends Controller
 {
@@ -27,13 +28,17 @@ class NavigationUrlController extends Controller
      */
     public function index() {
 
+        Log::info('Navigation-starting navigation');
+
         try {
 
             $query = NavigationUrl::select();
 
+            Log::info('Navigation-finishing navigation');
+
             return response()->json(DateHelper::getQueryPagination($query));
         } catch (\PDOException $exception) {
-
+            Log::info('Navigation-exception navigation'.$exception->getMessage());
             // something went wrong
             return response()->json(['error' => $exception->getMessage()], 500);
         }
@@ -41,10 +46,14 @@ class NavigationUrlController extends Controller
     
      public function getAdminUrls() {
 
-        try {
-            return response()->json(NavigationUrl::where('state', 1)->where('isAdmin', 1)->orderBy('order', 'asc')->get());
-        } catch (\PDOException $exception) {
+        Log::info('Navigation-starting getAdminUrls');
 
+        try {
+            $response = NavigationUrl::where('state', 1)->where('isAdmin', 1)->orderBy('order', 'asc')->get();
+            Log::info('Navigation-finishing getAdminUrls');
+            return response()->json($response);
+        } catch (\PDOException $exception) {
+                Log::info('Navigation-exception getAdminUrls'.$exception->getMessage());
             // something went wrong
             return response()->json(['error' => $exception->getMessage()], 500);
         }
@@ -52,10 +61,14 @@ class NavigationUrlController extends Controller
 
     public function getPublicUrls() {
 
+        Log::info('Navigation-starting getPublicUrls');
+        
         try {
-            return response()->json(NavigationUrl::where('state', 1)->where('isAdmin', 0)->orderBy('order', 'asc')->get());
+            $response = NavigationUrl::where('state', 1)->where('isAdmin', 0)->orderBy('order', 'asc')->get();
+            Log::info('Navigation-finishing getPublicUrls');
+            return response()->json($response);
         } catch (\PDOException $exception) {
-
+            Log::info('Navigation-exception getPublicUrls'.$exception->getMessage());
             // something went wrong
             return response()->json(['error' => $exception->getMessage()], 500);
         }
@@ -76,23 +89,23 @@ class NavigationUrlController extends Controller
      * @return Response
      */
     public function store(NavigationUrlRequest $request) {
+        
+        Log::info('Navigation-starting store'.$request['id']);
+
         try {
 
             $id = $request['id'];
-            DebugBar::info($id);
             
             if ($id == '0') {
-                DebugBar::info('I');
                 NavigationUrl::create($request->all());
             } else {
-                DebugBar::info('U');
                 $navigationUrl = NavigationUrl::find($id);
                 $navigationUrl->fill($request->all());
                 $navigationUrl->save();
             }
             return response()->json('Data saved');
         } catch (\PDOException $exception) {
-
+            Log::info('Navigation-exception store'.$exception->getMessage());
             // something went wrong
             return response()->json(['error' => $exception->getMessage()], 500);
         }
@@ -106,7 +119,10 @@ class NavigationUrlController extends Controller
      */
     public function show($id) {
 
+        Log::info('Navigation-starting show'.$id);
+
         $navigationUrl = NavigationUrl::find($id);
+        Log::info('Navigation-finishing show'.$id);
         return response()->json($navigationUrl);
     }
 

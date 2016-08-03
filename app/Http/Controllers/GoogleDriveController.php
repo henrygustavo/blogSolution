@@ -17,8 +17,8 @@ class GoogleDriveController extends Controller
   protected $jwt;
 
   public function __construct(FileManagerInterface $fileManager,JWTAuth $jwt) {
-      $this->jwt = $jwt;
-      $this->fileManager = $fileManager;
+        $this->jwt = $jwt;
+        $this->fileManager = $fileManager;
         // Apply the jwt.auth middleware to all methods in this controller
         $this->middleware('jwt.auth.permissions:admin', ['except' => ['getImageProfile']]);
         
@@ -26,38 +26,38 @@ class GoogleDriveController extends Controller
     
   public function getImageFolders(){
           
-        Log::info('config google image folder.'.Config::get('google.blog_folder_image_id'));
+        Log::info('GoogleDrive-config google image folder.'.Config::get('google.blog_folder_image_id'));
         $result = $this->fileManager ->getFolders(Config::get('google.blog_folder_image_id'));
-         
+        Log::info('GoogleDrive-finishing getImageFolders');
         return response()->json($result->listContents());
     }
     
     public function getFileFolders(){
           
-        Log::info('config google file folder.'.Config::get('google.blog_folder_file_id'));
+        Log::info('GoogleDrive-config google file folder.'.Config::get('google.blog_folder_file_id'));
         $result = $this->fileManager ->getFolders(Config::get('google.blog_folder_file_id'));
-         
+        Log::info('GoogleDrive-finishing getFileFolders');
         return response()->json($result->listContents());
     }
     
    public function getImages($folderId){
-        
-        $result = $this->fileManager ->getFiles($folderId);
-         
+         Log::info('GoogleDrive-starting getImages.'.$folderId);
+         $result = $this->fileManager ->getFiles($folderId);
+         Log::info('GoogleDrive-finishing getImages.'.$folderId);
         return response()->json(DateHelper::convertToListImage($result->listContents()));
     }
     
     public function getFiles($folderId){
-        
-        $result = $this->fileManager ->getFiles($folderId);
-         
+         Log::info('GoogleDrive-starting getFiles.'.$folderId);
+         $result = $this->fileManager ->getFiles($folderId);
+         Log::info('GoogleDrive-finishing getFiles.'.$folderId);
         return response($result->listContents());
     }
     
     public function getImageProfile(){
-        
+        Log::info('GoogleDrive-config google image folder.'.Config::get('google.blog_profile_file_id'));
         $result = $this->fileManager ->getFiles(Config::get('google.blog_profile_file_id'));
-         
+        Log::info('GoogleDrive-finishing getImageProfile');
         return response($result->listContents());
     }
 }

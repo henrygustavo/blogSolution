@@ -19,6 +19,7 @@ Route::get('/admin', function() {
   return  View::make('admin'); // will return app/views/index.php 
 });
 
+Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
 // API ROUTES ==================================  
 Route::group(array('prefix' => 'api'), function() {
